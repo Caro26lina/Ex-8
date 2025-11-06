@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Voting Platform</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #667eea;
+            --primary-dark: #5a67d8;
+            --secondary: #764ba2;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --dark: #1f2937;
+            --light: #f8fafc;
+            --gray: #6b7280;
+            --border: #e5e7eb;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            min-height: 100vh;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .logo i {
+            font-size: 1.8rem;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            color: var(--dark);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--primary);
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .nav-link.active {
+            color: var(--primary);
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-large {
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+        }
+
+        .btn-full {
+            width: 100%;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 4rem 0;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            font-weight: 800;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(45deg, #fff, #e0e7ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2.5rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border: 1px solid var(--border);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .card h3 {
+            color: var(--dark);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .card p {
+            color: var(--gray);
+            margin-bottom: 1.5rem;
+        }
+
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .feature-card {
+            text-align: center;
+            padding: 2.5rem 2rem;
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+
+        /* Forms */
+        .form-container {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            margin: 2rem auto;
+        }
+
+        .form-container h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--dark);
+            font-size: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: var(--light);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        textarea.form-input {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-footer {
+            text-align: center;
+            margin-top: 2rem;
+            color: var(--gray);
+        }
+
+        .form-footer a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .form-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: space-between;
+            margin-top: 2rem;
+        }
+
+        /* Competitions Grid */
+        .competitions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .competition-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .competition-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge-active {
+            background: var(--success);
+            color: white;
+        }
+
+        .badge-upcoming {
+            background: var(--warning);
+            color: white;
+        }
+
+        .badge-completed {
+            background: var(--gray);
+            color: white;
+        }
+
+        .competition-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .meta-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .meta-label {
+            font-size: 0.8rem;
+            color: var(--gray);
+            margin-bottom: 0.25rem;
+        }
+
+        .meta-value {
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        /* Stats */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 3rem 0;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        /* Messages */
+        .message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            z-index: 10000;
+            animation: slideInRight 0.3s ease;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .message.success {
+            background: var(--success);
+        }
+
+        .message.error {
+            background: var(--danger);
+        }
+
+        .message.info {
+            background: var(--primary);
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Sections */
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* User Menu */
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-greeting {
+            color: var(--dark);
+            font-weight: 500;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            .form-container {
+                margin: 1rem;
+                padding: 2rem;
+            }
+
+            .competitions-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .fa-spin {
+            animation: spin 1s linear infinite;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo" onclick="showSection('home')">
+                <i class="fas fa-vote-yea"></i>
+                DigitalVote
+            </a>
+            <div class="nav-links">
+                <a href="#" class="nav-link active" onclick="showSection('home')">Home</a>
+                <a href="#" class="nav-link" onclick="showSection('competitions')">Competitions</a>
+                <a href="#" class="nav-link" onclick="showSection('about')">How It Works</a>
+                
+                <div id="auth-buttons">
+                    <button class="btn btn-outline" onclick="showSection('login')">
+                        <i class="fas fa-sign-in-alt"></i>Login
+                    </button>
+                    <button class="btn btn-primary" onclick="showSection('register')">
+                        <i class="fas fa-user-plus"></i>Register
+                    </button>
+                </div>
+                
+                <div id="user-menu" class="user-menu hidden">
+                    <span id="user-greeting" class="user-greeting"></span>
+                    <button class="btn btn-outline" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i>Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Home Section -->
+        <section id="home" class="section active">
+            <div class="container">
+                <div class="hero">
+                    <h1>Vote for Excellence, Celebrate Talent</h1>
+                    <p>Join thousands of users in discovering and voting for the most amazing creative works across various competitions.</p>
+                    <div class="hero-buttons">
+                        <button class="btn btn-primary btn-large" onclick="showSection('competitions')">
+                            <i class="fas fa-trophy"></i>Browse Competitions
+                        </button>
+                        <button class="btn btn-outline btn-large" onclick="showSection('register')">
+                            <i class="fas fa-rocket"></i>Get Started
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Stats -->
+                <div class="stats">
+                    <div class="stat-card">
+                        <div class="stat-number" id="stats-competitions">50+</div>
+                        <div class="stat-label">Active Competitions</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="stats-users">10K+</div>
+                        <div class="stat-label">Registered Users</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="stats-votes">100K+</div>
+                        <div class="stat-label">Votes Cast</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="stats-winners">500+</div>
+                        <div class="stat-label">Winners Celebrated</div>
+                    </div>
+                </div>
+
+                <!-- Features -->
+                <div class="features-grid">
+                    <div class="card feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-upload"></i>
+                        </div>
+                        <h3>Submit Entries</h3>
+                        <p>Showcase your talent by submitting entries to various competitions and get recognized by the community.</p>
+                    </div>
+                    <div class="card feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-vote-yea"></i>
+                        </div>
+                        <h3>Vote Fairly</h3>
+                        <p>Participate in voting for your favorite entries and help decide the winners through transparent voting.</p>
+                    </div>
+                    <div class="card feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <h3>Win Prizes</h3>
+                        <p>Compete for amazing prizes, recognition, and opportunities to showcase your skills to the world.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Login Section -->
+        <section id="login" class="section">
+            <div class="container">
+                <div class="form-container">
+                    <h2><i class="fas fa-sign-in-alt"></i> Welcome Back</h2>
+                    <form id="login-form">
+                        <div class="form-group">
+                            <label class="form-label">Email Address</label>
+                            <input type="email" class="form-input" name="email" placeholder="Enter your email" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Password</label>
+                            <input type="password" class="form-input" name="password" placeholder="Enter your password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-full">
+                            <i class="fas fa-sign-in-alt"></i> Sign In
+                        </button>
+                    </form>
+                    <div class="form-footer">
+                        Don't have an account? <a href="#" onclick="showSection('register')">Create one here</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Register Section -->
+        <section id="register" class="section">
+            <div class="container">
+                <div class="form-container">
+                    <h2><i class="fas fa-user-plus"></i> Join Our Community</h2>
+                    <form id="register-form">
+                        <div class="form-group">
+                            <label class="form-label">Username</label>
+                            <input type="text" class="form-input" name="username" placeholder="Choose a username" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Email Address</label>
+                            <input type="email" class="form-input" name="email" placeholder="Enter your email" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Password</label>
+                            <input type="password" class="form-input" name="password" placeholder="Create a password (min. 6 characters)" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-full">
+                            <i class="fas fa-user-plus"></i> Create Account
+                        </button>
+                    </form>
+                    <div class="form-footer">
+                        Already have an account? <a href="#" onclick="showSection('login')">Sign in here</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Competitions Section -->
+        <section id="competitions" class="section">
+            <div class="container">
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                        <h2 style="margin: 0;"><i class="fas fa-trophy"></i> Current Competitions</h2>
+                        <button id="create-competition-btn" class="btn btn-primary hidden" onclick="showCreateCompetitionForm()">
+                            <i class="fas fa-plus"></i> Create Competition
+                        </button>
+                    </div>
+                    <div id="competitions-list" class="competitions-grid">
+                        <!-- Competitions will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Create Competition Section -->
+        <section id="create-competition-section" class="section">
+            <div class="container">
+                <div class="form-container">
+                    <h2><i class="fas fa-plus-circle"></i> Create New Competition</h2>
+                    <form id="create-competition-form">
+                        <div class="form-group">
+                            <label class="form-label">Competition Title *</label>
+                            <input type="text" id="competition-title" class="form-input" placeholder="Enter competition title" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Description *</label>
+                            <textarea id="competition-description" class="form-input" rows="4" placeholder="Describe your competition..." required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Category *</label>
+                            <select id="competition-category" class="form-input" required>
+                                <option value="">Select a category</option>
+                                <option value="music">Music</option>
+                                <option value="art">Art</option>
+                                <option value="writing">Writing</option>
+                                <option value="photography">Photography</option>
+                                <option value="technology">Technology</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Start Date *</label>
+                                <input type="date" id="competition-start-date" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">End Date *</label>
+                                <input type="date" id="competition-end-date" class="form-input" required>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-outline" onclick="showSection('competitions')">
+                                <i class="fas fa-arrow-left"></i> Back to Competitions
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-plus"></i> Create Competition
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works Section -->
+        <section id="about" class="section">
+            <div class="container">
+                <div class="hero">
+                    <h1>How It Works</h1>
+                    <p>Simple steps to participate and make your voice heard</p>
+                </div>
+                
+                <div class="features-grid">
+                    <div class="card feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <h3>1. Create Account</h3>
+                        <p>Sign up in less than a minute and join our growing community of creators and voters.</p>
+                    </div>
+                    <div class="card feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-upload"></i>
+                        </div>
+                        <h3>2. Submit Entry</h3>
+                        <p>Choose a competition and submit your work. Follow the guidelines for each category.</p>
+                    </div>
+                    <div class="card feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-vote-yea"></i>
+                        </div>
+                        <h3>3. Vote & Participate</h3>
+                        <p>Browse entries and vote for your favorites. Engage with the community through comments.</p>
+                    </div>
+                    <div class="card feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <h3>4. Win & Celebrate</h3>
+                        <p>Winners are announced after voting ends. Claim your prizes and get recognized!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Messages Container -->
+    <div id="message-container"></div>
+
+    <script>
+    const API_BASE = 'http://localhost:5000/api';
+
+    // Auth functions
+    class Auth {
+        static async register(userData) {
+            try {
+                showLoading('register-form');
+                const response = await fetch(`${API_BASE}/auth/register`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(userData)
+                });
+
+                const data = await response.json();
+                hideLoading('register-form');
+                return data;
+            } catch (error) {
+                console.error('Registration error:', error);
+                hideLoading('register-form');
+                return { success: false, message: 'Network error. Please check if backend is running.' };
+            }
+        }
+
+        static async login(credentials) {
+            try {
+                showLoading('login-form');
+                const response = await fetch(`${API_BASE}/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(credentials)
+                });
+
+                const data = await response.json();
+                hideLoading('login-form');
+                return data;
+            } catch (error) {
+                console.error('Login error:', error);
+                hideLoading('login-form');
+                return { success: false, message: 'Network error. Please check if backend is running.' };
+            }
+        }
+
+        static async getCurrentUser() {
+            const token = localStorage.getItem('token');
+            if (!token) return null;
+
+            try {
+                const response = await fetch(`${API_BASE}/auth/me`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                const data = await response.json();
+                return data.success ? data.user : null;
+            } catch (error) {
+                console.error('Get user error:', error);
+                return null;
+            }
+        }
+
+        static logout() {
+            localStorage.removeItem('token');
+            updateUI();
+            showSection('home');
+            showMessage('Logged out successfully', 'success');
+        }
+
+        static isAuthenticated() {
+            return !!localStorage.getItem('token');
+        }
+
+        static getToken() {
+            return localStorage.getItem('token');
+        }
+    }
+
+    // Competition functions
+    class Competitions {
+        static async getAll() {
+            try {
+                const response = await fetch(`${API_BASE}/competitions`);
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error('Get competitions error:', error);
+                return { success: false, message: 'Failed to load competitions' };
+            }
+        }
+
+        static async create(competitionData) {
+            const token = Auth.getToken();
+            if (!token) {
+                return { success: false, message: 'Not authenticated' };
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/competitions`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(competitionData)
+                });
+
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error('Create competition error:', error);
+                return { success: false, message: 'Network error' };
+            }
+        }
+    }
+
+    // UI Functions
+    function showSection(sectionName) {
+        // Hide all sections
+        document.querySelectorAll('.section').forEach(section => {
+            section.classList.remove('active');
+        });
+        
+        // Update nav links
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.classList.remove('active');
+        });
+        
+        // Show target section
+        document.getElementById(sectionName).classList.add('active');
+        
+        // Update active nav link
+        const navLink = document.querySelector(`[onclick="showSection('${sectionName}')"]`);
+        if (navLink) {
+            navLink.classList.add('active');
+        }
+
+        // Load competitions when competitions section is shown
+        if (sectionName === 'competitions') {
+            loadCompetitions();
+        }
+    }
+
+    function showMessage(message, type = 'info') {
+        const container = document.getElementById('message-container');
+        const messageEl = document.createElement('div');
+        messageEl.className = `message ${type}`;
+        messageEl.innerHTML = `
+            <i class="fas fa-${type === 'success' ? 'check' : type === 'error' ? 'exclamation-triangle' : 'info'}"></i>
+            ${message}
+        `;
+        
+        container.appendChild(messageEl);
+        
+        setTimeout(() => {
+            messageEl.remove();
+        }, 5000);
+    }
+
+    function showLoading(formId) {
+        const form = document.getElementById(formId);
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const originalText = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+        submitBtn.disabled = true;
+        submitBtn.setAttribute('data-original-text', originalText);
+    }
+
+    function hideLoading(formId) {
+        const form = document.getElementById(formId);
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const originalText = submitBtn.getAttribute('data-original-text');
+        if (originalText) {
+            submitBtn.innerHTML = originalText;
+        }
+        submitBtn.disabled = false;
+    }
+
+    function logout() {
+        Auth.logout();
+    }
+
+    async function updateUI() {
+        const authButtons = document.getElementById('auth-buttons');
+        const userMenu = document.getElementById('user-menu');
+        const createCompetitionBtn = document.getElementById('create-competition-btn');
+        const userGreeting = document.getElementById('user-greeting');
+
+        if (Auth.isAuthenticated()) {
+            const user = await Auth.getCurrentUser();
+            authButtons.classList.add('hidden');
+            userMenu.classList.remove('hidden');
+            createCompetitionBtn.classList.remove('hidden');
+            
+            if (user) {
+                userGreeting.textContent = `Hello, ${user.username}`;
+            }
+        } else {
+            authButtons.classList.remove('hidden');
+            userMenu.classList.add('hidden');
+            createCompetitionBtn.classList.add('hidden');
+        }
+    }
+
+    // Create Competition Form Function
+    function showCreateCompetitionForm() {
+        console.log('🎯 Create Competition button clicked!');
+        
+        if (!Auth.isAuthenticated()) {
+            showMessage('Please login to create competitions', 'error');
+            showSection('login');
+            return;
+        }
+        
+        console.log('✅ User is authenticated, showing create competition form');
+        
+        // Show the create competition section
+        showSection('create-competition-section');
+        
+        // Set default dates
+        const today = new Date();
+        const nextWeek = new Date();
+        nextWeek.setDate(today.getDate() + 7);
+        
+        document.getElementById('competition-title').value = '';
+        document.getElementById('competition-description').value = '';
+        document.getElementById('competition-category').value = '';
+        document.getElementById('competition-start-date').value = today.toISOString().split('T')[0];
+        document.getElementById('competition-end-date').value = nextWeek.toISOString().split('T')[0];
+        
+        // Focus on title field
+        setTimeout(() => {
+            document.getElementById('competition-title').focus();
+        }, 100);
+    }
+
+    // Handle competition form submission
+    async function handleCreateCompetition(e) {
+        e.preventDefault();
+        console.log('🎯 Competition form submitted!');
+        
+        if (!Auth.isAuthenticated()) {
+            showMessage('Please login to create competitions', 'error');
+            showSection('login');
+            return;
+        }
+        
+        const competitionData = {
+            title: document.getElementById('competition-title').value,
+            description: document.getElementById('competition-description').value,
+            category: document.getElementById('competition-category').value,
+            startDate: document.getElementById('competition-start-date').value,
+            endDate: document.getElementById('competition-end-date').value
+        };
+
+        // Validate required fields
+        if (!competitionData.title || !competitionData.description || !competitionData.category) {
+            showMessage('Please fill in all required fields', 'error');
+            return;
+        }
+
+        console.log('📝 Creating competition:', competitionData);
+
+        // Show loading state
+        const submitBtn = document.querySelector('#create-competition-form button[type="submit"]');
+        const originalText = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating...';
+        submitBtn.disabled = true;
+
+        const result = await Competitions.create(competitionData);
+
+        // Restore button state
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+
+        if (result.success) {
+            showMessage('🎉 Competition created successfully!', 'success');
+            document.getElementById('create-competition-form').reset();
+            showSection('competitions');
+            loadCompetitions(); // Refresh the competitions list
+        } else {
+            showMessage(result.message || 'Failed to create competition', 'error');
+        }
+    }
+
+    // Form Handlers
+    async function handleRegister(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(e.target);
+        const userData = {
+            username: formData.get('username') || document.querySelector('#register-form input[type="text"]').value,
+            email: formData.get('email') || document.querySelector('#register-form input[type="email"]').value,
+            password: formData.get('password') || document.querySelector('#register-form input[type="password"]').value
+        };
+
+        console.log('Registering user:', userData);
+
+        const result = await Auth.register(userData);
+
+        if (result.success) {
+            localStorage.setItem('token', result.token);
+            showMessage('Registration successful! Welcome to Digital Voting Platform!', 'success');
+            updateUI();
+            showSection('competitions');
+            e.target.reset();
+        } else {
+            const errorMsg = result.errors ? result.errors[0].msg : result.message;
+            showMessage(errorMsg || 'Registration failed. Please try again.', 'error');
+        }
+    }
+
+    async function handleLogin(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(e.target);
+        const credentials = {
+            email: formData.get('email') || document.querySelector('#login-form input[type="email"]').value,
+            password: formData.get('password') || document.querySelector('#login-form input[type="password"]').value
+        };
+
+        console.log('Logging in:', credentials);
+
+        const result = await Auth.login(credentials);
+
+        if (result.success) {
+            localStorage.setItem('token', result.token);
+            showMessage('Login successful! Welcome back!', 'success');
+            updateUI();
+            showSection('competitions');
+            e.target.reset();
+        } else {
+            showMessage(result.message || 'Login failed. Please check your credentials.', 'error');
+        }
+    }
+
+    async function loadCompetitions() {
+        const container = document.getElementById('competitions-list');
+        container.innerHTML = '<div class="card"><div class="spinner"></div><p style="text-align: center; margin-top: 1rem;">Loading competitions...</p></div>';
+
+        const result = await Competitions.getAll();
+        
+        if (!result.success || !result.data) {
+            container.innerHTML = '<div class="card"><p style="text-align: center; color: var(--danger);">Failed to load competitions</p></div>';
+            return;
+        }
+
+        if (result.data.length === 0) {
+            container.innerHTML = `
+                <div class="card" style="text-align: center; padding: 3rem;">
+                    <i class="fas fa-trophy" style="font-size: 4rem; color: var(--gray); margin-bottom: 1rem;"></i>
+                    <h3>No Competitions Yet</h3>
+                    <p style="color: var(--gray); margin-bottom: 2rem;">Be the first to create an amazing competition!</p>
+                    <button class="btn btn-primary" onclick="showCreateCompetitionForm()">
+                        <i class="fas fa-plus"></i> Create First Competition
+                    </button>
+                </div>
+            `;
+            return;
+        }
+
+        container.innerHTML = result.data.map(competition => `
+            <div class="card competition-card">
+                <div class="competition-badge badge-${competition.status || 'active'}">
+                    ${competition.status || 'Active'}
+                </div>
+                <h3>${competition.title}</h3>
+                <p>${competition.description}</p>
+                <div class="competition-meta">
+                    <div class="meta-item">
+                        <span class="meta-label">Category</span>
+                        <span class="meta-value" style="text-transform: capitalize;">${competition.category}</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Status</span>
+                        <span class="meta-value" style="text-transform: capitalize;">${competition.status}</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Ends</span>
+                        <span class="meta-value">${new Date(competition.endDate).toLocaleDateString()}</span>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // Test backend connection
+    async function testBackend() {
+        try {
+            const response = await fetch('http://localhost:5000/');
+            const data = await response.json();
+            console.log('✅ Backend connected:', data);
+        } catch (error) {
+            console.error('❌ Backend connection failed:', error);
+            showMessage('❌ Backend connection failed. Make sure server is running on port 5000', 'error');
+        }
+    }
+
+    // Initialize the application
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('🚀 Digital Voting Platform Frontend Loaded');
+        
+        // Test backend connection
+        testBackend();
+        
+        // Set up form event listeners
+        document.getElementById('register-form').addEventListener('submit', handleRegister);
+        document.getElementById('login-form').addEventListener('submit', handleLogin);
+        document.getElementById('create-competition-form').addEventListener('submit', handleCreateCompetition);
+        
+        // Update UI based on authentication status
+        updateUI();
+        
+        // Load competitions if on competitions page
+        if (document.getElementById('competitions').classList.contains('active')) {
+            loadCompetitions();
+        }
+    });
+</script>
+</body>
+</html>
